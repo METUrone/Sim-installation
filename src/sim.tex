@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage{verbatim}
+\usepackage[legalpaper,landscape, margin=0.5in]{geometry}
+
+\makeatletter
+\newenvironment{mycode}
+ {\def\@xobeysp{\ }\verbatim\rightskip=0pt plus 6em\relax}
+ {\endverbatim}
+\makeatother
+
+\title{Installation Documentation}
+
+\begin{document}
+
+\maketitle
+
+\section*{}
+\subsection*{}
+First, copy ubuntu\_sim\_ros\_melodic.sh to your home directory. \\
+Then, open your terminal and call the command \\
+\begin{verbatim}
+    source ubuntu_sim_ros_melodic.sh
+\end{verbatim}
+\noindent
+This command may take a few minutes, depending on internet connection. It downloads and installs ros, mavros, mavlink, Gazebo, and builds necessary things. \\
+After that, in your home directory, there should be a directory called "Firmware". \\
+\noindent
+Then, call these commands in your home directory. \\
+\begin{verbatim}
+    git clone https://github.com/METUrone/Firmware.git
+    sudo apt install python3-pip
+    pip3 install empy toml numpy packaging jinja2
+    sudo apt install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
+    sudo apt install gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+\end{verbatim}
+\noindent
+Open a new terminal, and write \\
+\begin{verbatim}
+    gedit .bashrc
+\end{verbatim}
+\noindent
+To this file's end, paste the following text. \\
+\begin{verbatim}
+    source Firmware/Tools/setup_gazebo.bash $(pwd)/Firmware $(pwd)/Firmware/build/px4_sitl_default
+    export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)/Firmware
+    export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)/Firmware/Tools/sitl_gazebo
+\end{verbatim}
+\noindent
+In the end, you should save and close the file. The last step in the installation is, calling \\
+\begin{verbatim}
+    gedit ./.ignition/fuel/config.yaml
+\end{verbatim}
+\noindent
+In that file, there is a line that writes \\
+\begin{verbatim}
+    url: https://api.ignitionfuel.org
+\end{verbatim}
+\noindent
+Change it as the following \\
+\begin{verbatim}
+    url: https://api.ignitionrobotics.org
+\end{verbatim}
+\noindent
+After that point, all installations are done. \\
+
+For running the simulation, you must run the following commands every time. \\
+
+Now open a new terminal, and call the command \\
+\begin{verbatim}
+    roscore
+\end{verbatim}
+\noindent
+Then, in a new terminal, call \\
+\begin{verbatim}
+    cd Firmware
+    no_sim=1 make px4_sitl_default gazebo
+\end{verbatim}
+\noindent
+This command will take at least 5 minutes in first call.
+Then open a new terminal and call \\
+\begin{verbatim}
+    roslaunch mavros px4.launch fcu_url:="udp://:14540@127.0.0.1:14557"
+\end{verbatim}
+\noindent
+Again, in a new terminal, call \\
+\begin{verbatim}
+    roslaunch gazebo_ros empty_world.launch world_name:=$(pwd)/Tools/sitl_gazebo_worlds_iris.world
+\end{verbatim}
+\noindent
+This command will open Gazebo after a few moments. \\
+From left, click insert, and from the left menu click 3DR Iris and place it on the simulation. \\
+Then, look for the terminals. You should see some changes. \\
+To try if it works, open the second terminal and write the command \\
+\begin{verbatim}
+    commander takeoff
+\end{verbatim}
+\noindent
+This should takeoff the drone on the simulator. \\
+After that, you can give your commands using your ros nodes. \\
+To try that, download the example package in the repository, build the ros package, and run it while all the terminals and simulation working. \\
+The drone should takeoff and stay at 2.5m. \\
+
+\end{document}
