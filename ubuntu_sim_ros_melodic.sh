@@ -46,8 +46,10 @@ else echo "$rossource" >> ~/.bashrc; fi
 eval $rossource
 
 ## Install rosinstall and other dependencies
-sudo apt install python-rosinstall python-rosinstall-generator python-wstool build-essential -y
-
+sudo apt install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential -y
+sudo rosdep init
+rosdep update
+cd ~
 
 
 # MAVROS: https://dev.px4.io/en/ros/mavros_installation.html
@@ -63,7 +65,7 @@ wstool init src
 
 ## Install MAVLink
 ###we use the Kinetic reference for all ROS distros as it's not distro-specific and up to date
-rosinstall_generator --rosdistro kinetic mavlink | tee /tmp/mavros.rosinstall
+rosinstall_generator --rosdistro melodic mavlink | tee /tmp/mavros.rosinstall
 
 ## Build MAVROS
 ### Get source (upstream - released)
@@ -83,6 +85,11 @@ if [[ ! -z $unsupported_os ]]; then
     >&2 echo -e "and continued with the installation, but if things are not working as"
     >&2 echo -e "expected you have been warned."
 fi
+
+sudo apt install python3-pip
+pip3 install empy toml numpy packaging jinja2
+sudo apt install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
+sudo apt install gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
 
 #Install geographiclib
 sudo apt install geographiclib -y

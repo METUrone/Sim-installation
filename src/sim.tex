@@ -2,12 +2,6 @@
 \usepackage{verbatim}
 \usepackage[legalpaper,landscape, margin=0.5in]{geometry}
 
-\makeatletter
-\newenvironment{mycode}
- {\def\@xobeysp{\ }\verbatim\rightskip=0pt plus 6em\relax}
- {\endverbatim}
-\makeatother
-
 \title{Installation Documentation}
 
 \begin{document}
@@ -23,15 +17,10 @@ Then, open your terminal and call the command \\
 \end{verbatim}
 \noindent
 This command may take a few minutes, depending on internet connection. It downloads and installs ros, mavros, mavlink, Gazebo, and builds necessary things. \\
-After that, in your home directory, there should be a directory called "Firmware". \\
 \noindent
 Then, call these commands in your home directory. \\
 \begin{verbatim}
     git clone https://github.com/METUrone/Firmware.git
-    sudo apt install python3-pip
-    pip3 install empy toml numpy packaging jinja2
-    sudo apt install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
-    sudo apt install gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
 \end{verbatim}
 \noindent
 Open a new terminal, and write \\
@@ -46,7 +35,27 @@ To this file's end, paste the following text. \\
     export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)/Firmware/Tools/sitl_gazebo
 \end{verbatim}
 \noindent
-In the end, you should save and close the file. The last step in the installation is, calling \\
+In the end, you should save and close the file. \\
+After that point, all installations are done. \\
+
+To run the simulation, you must execute the following commands every time. \\
+
+Now open a new terminal, and call the command \\
+\begin{verbatim}
+    roscore
+\end{verbatim}
+\noindent
+Then, in a new terminal, call \\
+\begin{verbatim}
+    cd Firmware
+    no_sim=1 make px4_sitl_default gazebo
+\end{verbatim}
+\noindent
+This command will take at least 5 minutes in first call. \\
+After the installation, the terminal will say "Waiting for simulator to accept connection on TCP port 4560". \\
+That means installation is done, after we inserted a drone into simulator, pixhawk will automatically connect to drone. \\
+---------------------------------------------------------------------------------- \\
+Just for the first time, please do the following, again in another terminal. \\
 \begin{verbatim}
     gedit ./.ignition/fuel/config.yaml
 \end{verbatim}
@@ -61,27 +70,14 @@ Change it as the following \\
     url: https://api.ignitionrobotics.org
 \end{verbatim}
 \noindent
-After that point, all installations are done. \\
+---------------------------------------------------------------------------------- \\
 
-For running the simulation, you must run the following commands every time. \\
-
-Now open a new terminal, and call the command \\
-\begin{verbatim}
-    roscore
-\end{verbatim}
-\noindent
-Then, in a new terminal, call \\
-\begin{verbatim}
-    cd Firmware
-    no_sim=1 make px4_sitl_default gazebo
-\end{verbatim}
-\noindent
-This command will take at least 5 minutes in first call.
 Then open a new terminal and call \\
 \begin{verbatim}
     roslaunch mavros px4.launch fcu_url:="udp://:14540@127.0.0.1:14557"
 \end{verbatim}
 \noindent
+This command will execute much faster, in the end the last line will be similar to this: "MAVROS started. MY ID 1.240, TARGET ID 1.1". \\
 Again, in a new terminal, call \\
 \begin{verbatim}
     roslaunch gazebo_ros empty_world.launch world_name:=$(pwd)/Tools/sitl_gazebo_worlds_iris.world
@@ -90,7 +86,7 @@ Again, in a new terminal, call \\
 This command will open Gazebo after a few moments. \\
 From left, click insert, and from the left menu click 3DR Iris and place it on the simulation. \\
 Then, look for the terminals. You should see some changes. \\
-To try if it works, open the second terminal and write the command \\
+To try if it works, open the second terminal(the one that we call "no\_sim=1 make px4\_sitl\_default gazebo") and write the command \\
 \begin{verbatim}
     commander takeoff
 \end{verbatim}
