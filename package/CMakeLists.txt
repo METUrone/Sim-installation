@@ -43,9 +43,9 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs message_generation mavro
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-   FILES
-   answer.msg
+#add_message_files(
+#   FILES
+#   answer.msg
 #   Message2.msg
 )
 
