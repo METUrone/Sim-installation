@@ -86,6 +86,7 @@ if [[ ! -z $unsupported_os ]]; then
     >&2 echo -e "expected you have been warned."
 fi
 
+git clone https://github.com/METUrone/Firmware.git
 sudo apt install python3-pip
 pip3 install empy toml numpy packaging jinja2
 sudo apt install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly
